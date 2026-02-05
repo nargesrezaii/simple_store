@@ -1,0 +1,18 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <title>Create Category</title>
+</head>
+<body>
+    <h1>Create Category</h1>
+    {% if error %}
+    <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %} 
+        <label>Category Name</label>
+        <input type="text" name="name"/><br />
+        <button type="submit">Create Category</button>
+    </form>
+</body>
+</html>
