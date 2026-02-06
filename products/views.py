@@ -5,6 +5,11 @@ from .models import Product, Category
 def home(request):
     return HttpResponse("Home Page")
 
+def category_list(request):
+    categories = Category.objects.all()
+  
+    return render(request, 'products/category_list.html', {'categories':categories})
+
 def create_category(request):
     if request.method == "POST":
         name = request.POST.get('name')
@@ -13,7 +18,7 @@ def create_category(request):
             return render(request, 'products/create_category.html', {'error':'Category name is required.'})
         
         Category.objects.create(name=name)
-        return redirect('create_category')
+        return redirect('category_list')
 
     return render(request, "products/create_category.html")
 

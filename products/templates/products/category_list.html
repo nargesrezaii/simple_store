@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Category List</title>
+</head>
+<body>
+    <h1>Categories</h1>
+    {% if categories %}
+        <ul>
+            {% for category in categories %}
+            <li>{{category.name}}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No categories available.</p>
+    {% endif %}
+</body>
+</html>
