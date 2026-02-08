@@ -25,6 +25,11 @@ def create_category(request):
                   "products/create_category.html",
                  {'form': form})
 
+def product_list(request):
+    products = Product.objects.all()
+
+    return render(request, 'products/product_list.html', {'products':products})
+
 def create_product(request):
     if request.method == "POST":
         form = ProductForm(request.POST)
