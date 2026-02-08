@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Product, Category
+from .forms import CategoryForm, ProductForm
 
 def home(request):
     return HttpResponse("Home Page")
@@ -12,39 +13,28 @@ def category_list(request):
 
 def create_category(request):
     if request.method == "POST":
-        name = request.POST.get('name')
-
-        if not name:
-            return render(request, 'products/create_category.html', {'error':'Category name is required.'})
+        form = CategoryForm(request.POST)
         
-        Category.objects.create(name=name)
-        return redirect('category_list')
-
-    return render(request, "products/create_category.html")
+        if form.is_valid():
+            form.save()
+            return redirect('category_list')
+    else:
+        form = CategoryForm()
+        
+    return render(request,
+                  "products/create_category.html",
+                 {'form': form})
 
 def create_product(request):
-    categories = Category.objects.all()
-    
-    if not categories.exists():
-        return HttpResponse(
-            "You must create categories before adding products.",
-            status=400
-        )
-
     if request.method == "POST":
-        category_id = request.POST.get('category')
-        category = Category.objects.get(id=category_id)
-
-        Product.objects.create(
-            name = request.POST.get('name'),
-            price = request.POST.get('price'),
-            description=request.POST.get('description'),
-            stock=request.POST.get('stock'),
-            category=category
-            )
+        form = ProductForm(request.POST)
         
-        return redirect('home')
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = ProductForm()
 
     return render(request,
                  'products/create_product.html',
-                 {'categories':categories})
+                 {'form':form})
