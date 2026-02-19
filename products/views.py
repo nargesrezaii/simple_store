@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+
+import products
 from .models import Product, Category
 from .forms import CategoryForm, ProductForm
 
@@ -54,10 +56,24 @@ def create_product(request):
         
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('product_list')
     else:
         form = ProductForm()
 
     return render(request,
                  'products/create_product.html',
                  {'form':form})
+
+def product_update(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, instance=product)
+
+        if form.is_valid():
+            form.save()
+            return redirect('product_detail', pk=product.pk)
+
+    else:
+        form = ProductForm(instance=product)
+        
+    return render(request, 'products/product_form.html', {'form': form})
