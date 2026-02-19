@@ -27,9 +27,18 @@ def create_category(request):
                  {'form': form})
 
 def product_list(request):
-    products = Product.objects.all()
+    products = Product.objects.select_related('category')
+    categories = Category.objects.all()
+    
+    category_id = request.GET.get('category')
+    
+    if category_id:
+        category_id = int(category_id)
+        products = products.filter(category_id=category_id)
+      
+    context = {'products':products, 'categories': categories, 'selected_category': category_id,}
 
-    return render(request, 'products/product_list.html', {'products':products})
+    return render(request, 'products/product_list.html', context)
 
 def product_detail(request, pk):
     product = get_object_or_404(
